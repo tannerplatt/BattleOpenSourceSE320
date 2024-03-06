@@ -17,7 +17,7 @@ void Battle::startBattle() {
     while (!isBattleOver()) {
         playerTurn(m_player1, m_player2);
         if (isBattleOver()) break;
-        playerTurn(m_player2, m_player1);
+        aiTurn(m_player2, m_player1);
     }
 
     std::cout << "Battle Over!" << std::endl;
@@ -29,10 +29,26 @@ void Battle::startBattle() {
     }
 }
 
-//where player deals damage to other player
-void Battle::playerTurn(Player &attacker, Player &defender) {
-    std::cout << attacker.getName() << " attacks!" << std::endl;
-    defender.receiveDamage(attacker.getAttackPower());
+//where player deals damage to ai
+void Battle::playerTurn(Player &player, Player &ai) {
+    int choice;
+    std::cout << "What would you like to do: \n1 Attack \n2 Power Attack \n3 Heal";
+    std::cin >> choice;
+    if (choice == 1){
+        std::cout << player.getName() << " attacks!" << std::endl;
+        ai.receiveDamage(player.getAttackPower());
+    }else if (choice == 2){
+        // add Power Attack
+    }else if (choice == 3){
+        // add heal
+    }
+    displayStatus();
+}
+
+//where ai deals damage to the player
+void Battle::aiTurn(Player &ai, Player &player) {
+    std::cout << ai.getName() << " attacks!" << std::endl;
+    player.receiveDamage(ai.getAttackPower());
     displayStatus();
 }
 
