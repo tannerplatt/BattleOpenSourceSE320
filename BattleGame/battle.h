@@ -15,7 +15,8 @@ private:
     Player m_player1;
     Player m_player2;
 
-    void playerTurn(Player &attacker, Player &defender);
+    void playerTurn(Player &player, Player &ai);
+    void aiTurn(Player &ai, Player &player);
     void displayStatus();
     bool isBattleOver();
 };
