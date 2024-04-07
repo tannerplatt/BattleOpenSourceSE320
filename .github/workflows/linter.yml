@@ -15,11 +15,16 @@ jobs:
   run-lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
         with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
+
+      - name: Compile C++ Code
+        run: g++ *.cpp -o BattleGame
+
+      - name: Run Tests
+        run: ./BattleGame -test
 
       - name: Lint Code Base
         uses: github/super-linter@v4
