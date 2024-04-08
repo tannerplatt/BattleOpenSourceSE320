@@ -11,12 +11,17 @@ public:
     std::string getName();
     int getHealth();
     int getAttackPower();
+    int getCooldown();
+    void decrementCooldown();
     void receiveDamage(int amount);
     void heal(int amount);
     bool isAlive();
+    bool canHeal();
 
 private:
     std::string m_name;
+    bool m_heal;
+    int m_cooldown;
     int m_health;
     int m_attackPower;
 };

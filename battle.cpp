@@ -32,24 +32,50 @@ void Battle::startBattle() {
 
 //where player deals damage to ai
 void Battle::playerTurn(Player &player, Player &ai) {
-    int choice;
-    std::cout << "What would you like to do: \n1 Attack \n2 Power Attack \n3 Heal";
-    std::cin >> choice;
-    if (choice == 1){
-        std::cout << player.getName() << " attacks!" << std::endl;
-        ai.receiveDamage(player.getAttackPower());
-    }else if (choice == 2){
-        // add Power Attack
-    }else if (choice == 3){
-        heal(player);
+    while(1){
+        int choice;
+        std::cout << "What would you like to do: \n1 Attack \n2 Power Attack \n3 Heal\n";
+        std::cin >> choice;
+        if (choice == 1){
+            std::cout << player.getName() << " attacks!" << std::endl;
+            ai.receiveDamage(player.getAttackPower());
+            player.decrementCooldown();
+            break;
+        }else if (choice == 2){
+            // add Power Attack
+        }else if (choice == 3){
+            if (player.canHeal()){
+                heal(player);
+                std::cout << player.getName() << " heals!" << std::endl;
+                break;
+            }else{
+                std::cout << player.getName() << " can heal in " << player.getCooldown() << " turns." << std::endl;
+            } 
+        }
     }
     displayStatus();
 }
 
 //where ai deals damage to the player
 void Battle::aiTurn(Player &ai, Player &player) {
-    std::cout << ai.getName() << " attacks!" << std::endl;
-    player.receiveDamage(ai.getAttackPower());
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    int min = 1, max = 2;
+    std::uniform_int_distribution<> distr(min, max); 
+    int choice;
+    if (ai.canHeal()){
+        choice = distr(gen);
+    }else{
+        choice = 1;
+    }
+    if(choice == 1){
+        std::cout << ai.getName() << " attacks!" << std::endl;
+        player.receiveDamage(ai.getAttackPower());
+        ai.decrementCooldown();
+    }else{
+        heal(ai);
+        std::cout << ai.getName() << " heals!" << std::endl;
+    }
     displayStatus();
 }
 
