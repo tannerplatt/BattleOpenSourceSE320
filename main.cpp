@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <stdexcept>
 #include "battle.h"
 
 
@@ -7,13 +8,26 @@ void unitTests(){
     Player test("test_player", 100, 15);
     test.receiveDamage(105);
     if (test.getHealth() != 0){
-
+        throw std::runtime_error("Player health cannot go below 0.");
     }else{
         std::cout << "Test 1 Complete!" << std::endl;
     }
-    Player test2("test_player2", 100, 15);
-    Player test3("test_player3", 100, 15);
-    Battle battle(test2, test3);
+    Player test2("test_player2", 100, 12);
+    Player test3("test_player3", 100, 18);
+    Battle testBattle;
+    testBattle.playerTurn(test2,test3);
+    testBattle.aiTurn(test3,test2);
+    if (test2.getHealth() != 82){
+        throw std::runtime_error("Error with Ai Turn.");
+    }else{
+        std::cout << "Test 2 Complete!" << std::endl;
+    }
+    if (test3.getHealth() != 88){
+        throw std::runtime_error("Error with Player turn.");
+    }else{
+        std::cout << "Test 3 Complete!" << std::endl;
+    }
+
 }
 
 int main(int argc, char **argv) {
