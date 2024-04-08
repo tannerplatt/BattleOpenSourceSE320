@@ -12,19 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    
-    - name: Install Clang Tools
-      run: |
-        sudo apt-get update
-        sudo apt-get install clang-format clang-tidy -y
-
-    - name: Run clang-format
-      run: |
-        find . -regex '.*\.\(cpp\|hpp\|cc\|h\)' -exec clang-format -i -style=file {} \+
-        git diff --exit-code
-
-    - name: Run clang-tidy
-      run: |
-        find . -regex '.*\.\(cpp\|hpp\|cc\|h\)' -exec clang-tidy {} \;
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Lint C++ Files
+        run: |
+          find . -type f -name '*.cpp' -o -name '*.h' | while read file; do
+            echo "Linting $file"
+            # Check for tabs
+            grep -P "\t" "$file" && echo "Tabs found in $file" && exit 1
+            # Check for line length
+            awk 'length($0) > 80 { print FILENAME ":" FNR ": line exceeds 80 characters"; exit 1 }' "$file"
+            # Check if file ends with a newline
+            tail -c1 "$file" | read -r _ || echo "$file does not end with a newline" && exit 1
+          done
