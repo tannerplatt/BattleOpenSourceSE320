@@ -4,7 +4,16 @@
 
 
 void unitTests(){
-    std::cout << "Hello World" << std::endl;
+    Player test("test_player", 100, 15);
+    test.receiveDamage(105);
+    if (test.getHealth() != 0){
+
+    }else{
+        std::cout << "Test 1 Complete!" << std::endl;
+    }
+    Player test2("test_player2", 100, 15);
+    Player test3("test_player3", 100, 15);
+    Battle battle(test2, test3);
 }
 
 int main(int argc, char **argv) {
