@@ -52,6 +52,10 @@ void Battle::aiTurn(Player &ai, Player &player) {
     displayStatus();
 }
 
+void Battle::testTurn(Player &test1, Player &test2){
+    test2.receiveDamage(test1.getAttackPower());
+}
+
 //displays both players current HP
 void Battle::displayStatus(){
     std::cout << m_player1.getName() << ": " << m_player1.getHealth() << " HP" << std::endl;
