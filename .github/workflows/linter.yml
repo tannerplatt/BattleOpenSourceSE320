@@ -12,13 +12,19 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install Clang Tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install clang-format clang-tidy -y
 
-      - name: Lint Code Base
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_ALL_CODEBASE: true
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Run clang-format
+      run: |
+        find . -regex '.*\.\(cpp\|hpp\|cc\|h\)' -exec clang-format -i -style=file {} \+
+        git diff --exit-code
+
+    - name: Run clang-tidy
+      run: |
+        find . -regex '.*\.\(cpp\|hpp\|cc\|h\)' -exec clang-tidy {} \;
