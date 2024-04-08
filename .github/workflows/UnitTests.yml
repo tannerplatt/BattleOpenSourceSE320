@@ -1,0 +1,21 @@
+name: UnitTests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  run-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Compile C++ Code
+        run: g++ *.cpp -o BattleGame
+
+      - name: Run Tests
+        run: ./BattleGame -test
