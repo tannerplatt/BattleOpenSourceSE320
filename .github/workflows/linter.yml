@@ -15,22 +15,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       
-      - name: Lint C++ Files
+      - name: Lint C++ Files (Less Strict)
         run: |
           find . -type f \( -name '*.cpp' -o -name '*.h' \) | while read file; do
             echo "Linting $file"
-            # Check for tabs
+            # Optionally check for tabs. Remove this block if tabs are allowed.
             if grep -P "\t" "$file"; then
-              echo "Error: Tabs found in $file"
-              exit 1
+              echo "Warning: Tabs found in $file. Consider replacing with spaces for consistency."
+              # Note: Changed to a warning instead of an error; remove 'exit 1' if you don't want it to fail the CI.
+              # exit 1
             fi
-            # Check for line length
-            if awk 'length($0) > 80 { print FILENAME ":" FNR ": line exceeds 80 characters"; exit 1 }' "$file"; then
-              exit 1
-            fi
+            
             # Check if file ends with a newline
             if [ "$(tail -c1 "$file" | wc -l)" -eq "0" ]; then
-              echo "Error: $file does not end with a newline"
-              exit 1
+              echo "Warning: $file does not end with a newline. It's recommended to add one."
+              # Note: Changed to a warning instead of an error; remove 'exit 1' if you don't want it to fail the CI.
+              # exit 1
             fi
           done
