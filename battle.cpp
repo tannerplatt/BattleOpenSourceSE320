@@ -65,6 +65,14 @@ void Battle::testTurn(Player &test1, Player &test2){
     test2.receiveDamage(test1.getAttackPower());
 }
 
+void Battle::testHeal(Player &player){
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    int min = 2, max = 20;
+    std::uniform_int_distribution<> distr(min, max); 
+    player.heal(distr(gen));
+}
+
 //displays both players current HP
 void Battle::displayStatus(){
     std::cout << m_player1.getName() << ": " << m_player1.getHealth() << " HP" << std::endl;
