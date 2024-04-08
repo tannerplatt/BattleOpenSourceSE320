@@ -1,5 +1,6 @@
 #include "battle.h"
 #include <iostream>
+#include <random>
 
 Battle::Battle(){
 }
@@ -40,7 +41,7 @@ void Battle::playerTurn(Player &player, Player &ai) {
     }else if (choice == 2){
         // add Power Attack
     }else if (choice == 3){
-        // add heal
+        heal(player);
     }
     displayStatus();
 }
@@ -50,6 +51,14 @@ void Battle::aiTurn(Player &ai, Player &player) {
     std::cout << ai.getName() << " attacks!" << std::endl;
     player.receiveDamage(ai.getAttackPower());
     displayStatus();
+}
+
+void Battle::heal(Player &player){
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    int min = 2, max = 20;
+    std::uniform_int_distribution<> distr(min, max); 
+    player.heal(distr(gen));
 }
 
 void Battle::testTurn(Player &test1, Player &test2){

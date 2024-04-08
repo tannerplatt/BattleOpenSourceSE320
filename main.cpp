@@ -27,7 +27,13 @@ void unitTests(){
     }else{
         std::cout << "Test 3 Complete!" << std::endl;
     }
-
+    Player test4("test_player4", 100, 18);
+    testBattle.testHeal(test4);
+    if (test4.getHealth() > 100){
+        throw std::runtime_error("Error with healing.");
+    }else{
+        std::cout << "Test 4 Complete!" << std::endl;
+    }
 }
 
 int main(int argc, char **argv) {

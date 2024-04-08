@@ -12,6 +12,7 @@ public:
     int getHealth();
     int getAttackPower();
     void receiveDamage(int amount);
+    void heal(int amount);
     bool isAlive();
 
 private:

@@ -26,6 +26,13 @@ int Player::getAttackPower(){
     return m_attackPower;
 }
 
+void Player::heal(int amount){
+    m_health += amount;
+    if (m_health > 100){
+        m_health = 100;
+    }
+}
+
 //player recieves damage and if their health goes below 0 it is set to 0
 void Player::receiveDamage(int amount){
     m_health -= amount;
