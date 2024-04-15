@@ -32,6 +32,7 @@ int Player::getCooldown(){
     return m_cooldown;
 }
 
+//cooldown used for healing
 void Player::decrementCooldown(){
     m_cooldown--;
     if (m_cooldown <= 0){
@@ -44,6 +45,7 @@ bool Player::canHeal(){
     return m_heal;
 }
 
+//player can heal and health cannot go above 100
 void Player::heal(int amount){
     m_health += amount;
     if (m_health > 100){
