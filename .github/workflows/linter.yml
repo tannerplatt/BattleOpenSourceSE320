@@ -22,14 +22,12 @@ jobs:
             # Optionally check for tabs. Remove this block if tabs are allowed.
             if grep -P "\t" "$file"; then
               echo "Warning: Tabs found in $file. Consider replacing with spaces for consistency."
-              # Note: Changed to a warning instead of an error; remove 'exit 1' if you don't want it to fail the CI.
-              # exit 1
+              exit 1
             fi
             
             # Check if file ends with a newline
             if [ "$(tail -c1 "$file" | wc -l)" -eq "0" ]; then
               echo "Warning: $file does not end with a newline. It's recommended to add one."
-              # Note: Changed to a warning instead of an error; remove 'exit 1' if you don't want it to fail the CI.
-              # exit 1
+              exit 1
             fi
           done
