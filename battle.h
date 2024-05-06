@@ -13,17 +13,15 @@ public:
     void testTurn(Player &test1, Player &test2);
     void testHeal(Player &test);
 
+private:
+    Player m_player1;
+    Player m_player2;
+
     void playerTurn(Player &player, Player &ai);
     void aiTurn(Player &ai, Player &player);
     void heal(Player &player);
     void displayStatus();
     bool isBattleOver();
-
-private:
-    Player m_player1;
-    Player m_player2;
-
-    
 };
 
 #endif

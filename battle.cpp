@@ -24,38 +24,82 @@ Battle::Battle(Player player1, Player player2){
 Battle::~Battle(){
 }
 
-// creates a random chance of missing
-bool randomChance(float probability) {
+void Battle::startBattle() {
+    //battle takes place within while loop
+    while (!isBattleOver()) {
+        playerTurn(m_player1, m_player2);
+        if (isBattleOver()) break;
+        aiTurn(m_player2, m_player1);
+    }
+
+    std::cout << "Battle Over!" << std::endl;
+
+    if (m_player1.isAlive()) {
+        std::cout << m_player1.getName() << YELLOW << " wins!" << RESET << std::endl;
+    } else {
+        std::cout << m_player2.getName() << YELLOW <<  " wins!" << RESET << std::endl;
+    }
+}
+
+//where player deals damage to ai
+void Battle::playerTurn(Player &player, Player &ai) {
+    while(1){
+        int choice;
+        std::cout << "What would you like to do? " << std::endl;
+        std::cout << PURPLE << "1 Attack" << RESET << std::endl;
+        std::cout << ORANGE << "2 Power Attack " << RESET << RED << "(In Development)" << RESET << std::endl;
+        std::cout << BLUE << "3 Heal" << RESET << std::endl;
+        std::cin >> choice;
+        if (choice == 1){
+            std::cout << std::endl;
+            ai.receiveDamage(player.getAttackPower());
+            player.decrementCooldown();
+            std::cout << player.getName() << " attacks and deals " << RED << player.getAttackPower() << RESET << " damage!" << std::endl;
+            std::cout << WHITE << "-----------" << RESET << std::endl; // Adding some lines to distinguish the output so it's cleaner - Jaden J.
+            break;
+        }else if (choice == 2){
+            // add Power Attack
+        }else if (choice == 3){
+            if (player.canHeal()){
+                heal(player);
+                std::cout << player.getName() << PINK << " heals!" << RESET << std::endl;
+                std::cout << WHITE << "-----------" << RESET << std::endl; // Adding some lines to distinguish the output so it's cleaner - Jaden J.
+                break;
+            }else{
+                std::cout << player.getName() << " can heal in " << player.getCooldown() << " turns." << std::endl;
+                std::cout << WHITE << "-----------" << RESET << std::endl; // Adding some lines to distinguish the output so it's cleaner - Jaden J.
+            } 
+        }
+    }
+    displayStatus();
+}
+
+//where ai deals damage to the player
+void Battle::aiTurn(Player &ai, Player &player) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::bernoulli_distribution d(probability);
-    return d(gen);
-}
-
-void Battle::playerTurn(Player &player, Player &ai) {
-    if (randomChance(0.8)) {  // 80% chance to hit
-        int damage = player.getAttackPower();
-        ai.receiveDamage(damage);
-        std::cout << player.getName() << " hits " << ai.getName() << " for " << damage << " damage!" << std::endl;
-    } else {
-        std::cout << player.getName() << " misses the attack!" << std::endl;
+    int min = 1, max = 2;
+    std::uniform_int_distribution<> distr(min, max); 
+    int choice;
+    if (ai.canHeal()){
+        choice = distr(gen);
+    }else{
+        choice = 1;
+    }
+    if(choice == 1){
+        player.receiveDamage(ai.getAttackPower()); // moving these lines before the actual cout so that we can tell how much damage is done. May potentially need to be changed if we adjust how damage is calculated
+        ai.decrementCooldown();
+        std::cout << ai.getName() << " attacks and deals " << RED << ai.getAttackPower() << RESET << " damage!" << std::endl;
+        std::cout << WHITE << "-----------" << RESET << std::endl; // Adding some lines to distinguish the output so it's cleaner - Jaden J.
+    }else{
+        heal(ai);
+        std::cout << ai.getName() << PINK << " heals!" << RESET << std::endl;
+        std::cout << WHITE << "-----------" << RESET << std::endl; // Adding some lines to distinguish the output so it's cleaner - Jaden J.
     }
     displayStatus();
 }
 
-void Battle::aiTurn(Player &ai, Player &player) {
-    if (randomChance(0.8)) {  // 80% chance to hit
-        int damage = ai.getAttackPower();
-        player.receiveDamage(damage);
-        std::cout << ai.getName() << " hits " << player.getName() << " for " << damage << " damage!" << std::endl;
-    } else {
-        std::cout << ai.getName() << " misses the attack!" << std::endl;
-    }
-    displayStatus();
-}
-
-
-void Battle::testHeal(Player &player) {
+void Battle::heal(Player &player){
     std::random_device rd;
     std::mt19937 gen(rd());
     int min = 2, max = 20;
@@ -63,36 +107,26 @@ void Battle::testHeal(Player &player) {
     player.heal(distr(gen));
 }
 
-void Battle::testTurn(Player &test1, Player &test2) {
-    // Example implementation, adjust according to actual test needs
-    std::cout << "Testing turn between " << test1.getName() << " and " << test2.getName() << std::endl;
-    test1.receiveDamage(test2.getAttackPower());
+void Battle::testTurn(Player &test1, Player &test2){
     test2.receiveDamage(test1.getAttackPower());
-    std::cout << test1.getName() << " Health: " << test1.getHealth() << std::endl;
-    std::cout << test2.getName() << " Health: " << test2.getHealth() << std::endl;
 }
 
-void Battle::displayStatus() {
+void Battle::testHeal(Player &player){
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    int min = 2, max = 20;
+    std::uniform_int_distribution<> distr(min, max); 
+    player.heal(distr(gen));
+}
+
+//displays both players current HP
+void Battle::displayStatus(){
     std::cout << m_player1.getName() << ": " << GREEN << m_player1.getHealth() << RESET << " HP" << std::endl;
     std::cout << m_player2.getName() << ": " << GREEN << m_player2.getHealth() << RESET << " HP" << std::endl;
-    std::cout << WHITE << "-----------" << RESET << std::endl;
+    std::cout << WHITE << "-----------" << RESET << std::endl; // Adding some lines to distinguish the output so it's cleaner - Jaden J.
 }
 
-bool Battle::isBattleOver() {
+//checks if a player has died
+bool Battle::isBattleOver(){
     return !m_player1.isAlive() || !m_player2.isAlive();
-}
-
-void Battle::startBattle() {
-    while (!isBattleOver()) {
-        playerTurn(m_player1, m_player2);
-        if (isBattleOver()) {
-            std::cout << m_player2.getName() << " has been defeated!" << std::endl;
-            break;
-        }
-        aiTurn(m_player2, m_player1);
-        if (isBattleOver()) {
-            std::cout << m_player1.getName() << " has been defeated!" << std::endl;
-            break;
-        }
-    }
 }
