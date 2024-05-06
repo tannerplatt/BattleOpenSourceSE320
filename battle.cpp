@@ -43,6 +43,10 @@ void Battle::startBattle() {
 
 //where player deals damage to ai
 void Battle::playerTurn(Player &player, Player &ai) {
+    static std::mt19937 rng(time(nullptr));  // Random number generator 
+    std::uniform_int_distribution<int> dist(1, 100);  // Distribution from 1 to 100
+    int chanceToHit = 80;  // 80% chance to hit, 20% chance to miss
+
     while(1){
         int choice;
         std::cout << "What would you like to do? " << std::endl;
@@ -51,6 +55,10 @@ void Battle::playerTurn(Player &player, Player &ai) {
         std::cout << BLUE << "3 Heal" << RESET << std::endl;
         std::cin >> choice;
         if (choice == 1){
+            if (dist(rng) > chanceToHit) {  // Check if the attack misses
+                    std::cout << player.getName() << " misses the attack!" << std::endl;
+                    break;  // Skip the turn if miss
+                }
             std::cout << std::endl;
             ai.receiveDamage(player.getAttackPower());
             player.decrementCooldown();
@@ -60,6 +68,10 @@ void Battle::playerTurn(Player &player, Player &ai) {
         }else if (choice == 2){
             // add Power Attack
         }else if (choice == 3){
+            if (dist(rng) > chanceToHit) {  // Check if the attack misses
+                    std::cout << player.getName() << " misses the attack!" << std::endl;
+                    break;  // Skip the turn if miss
+                }
             if (player.canHeal()){
                 heal(player);
                 std::cout << player.getName() << PINK << " heals!" << RESET << std::endl;
@@ -76,6 +88,10 @@ void Battle::playerTurn(Player &player, Player &ai) {
 
 //where ai deals damage to the player
 void Battle::aiTurn(Player &ai, Player &player) {
+    static std::mt19937 rng(time(nullptr));  // Random number generator 
+    std::uniform_int_distribution<int> dist(1, 100);  // Distribution from 1 to 100
+    int chanceToHit = 80;  // 80% chance to hit, 20% chance to miss
+
     std::random_device rd;
     std::mt19937 gen(rd());
     int min = 1, max = 2;
@@ -87,6 +103,10 @@ void Battle::aiTurn(Player &ai, Player &player) {
         choice = 1;
     }
     if(choice == 1){
+        if (dist(rng) > chanceToHit) {  // Check if the attack misses
+            std::cout << "ai  misses the attack!" << std::endl;
+         
+        }
         player.receiveDamage(ai.getAttackPower()); // moving these lines before the actual cout so that we can tell how much damage is done. May potentially need to be changed if we adjust how damage is calculated
         ai.decrementCooldown();
         std::cout << ai.getName() << " attacks and deals " << RED << ai.getAttackPower() << RESET << " damage!" << std::endl;
