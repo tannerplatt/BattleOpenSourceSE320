@@ -43,7 +43,7 @@ void Battle::startBattle() {
 
 //where player deals damage to ai
 void Battle::playerTurn(Player &player, Player &ai) {
-    static std::mt19937 rng(std::time(nullptr));  // Random number generator 
+    static std::mt19937 rng(time(nullptr));  // Random number generator 
     std::uniform_int_distribution<int> dist(1, 100);  // Distribution from 1 to 100
     int chanceToHit = 80;  // 80% chance to hit, 20% chance to miss
 
@@ -88,7 +88,7 @@ void Battle::playerTurn(Player &player, Player &ai) {
 
 //where ai deals damage to the player
 void Battle::aiTurn(Player &ai, Player &player) {
-    static std::mt19937 rng(std::time(nullptr));  // Random number generator 
+    static std::mt19937 rng(time(nullptr));  // Random number generator 
     std::uniform_int_distribution<int> dist(1, 100);  // Distribution from 1 to 100
     int chanceToHit = 80;  // 80% chance to hit, 20% chance to miss
 
@@ -104,7 +104,7 @@ void Battle::aiTurn(Player &ai, Player &player) {
     }
     if(choice == 1){
         if (dist(rng) > chanceToHit) {  // Check if the attack misses
-            std::cout << player.getName() << " misses the attack!" << std::endl;
+            std::cout << "ai  misses the attack!" << std::endl;
          
         }
         player.receiveDamage(ai.getAttackPower()); // moving these lines before the actual cout so that we can tell how much damage is done. May potentially need to be changed if we adjust how damage is calculated
